@@ -20,11 +20,16 @@ const App: React.FC = () => {
     } catch (error: any) {
       console.error(error);
       setAppState(AppState.ERROR);
-      // Check for specific Gemini API errors
-      if (error.message?.includes('429') || error.message?.includes('Quota') || error.status === 429) {
+      
+      // Handle specific errors
+      if (error.message === 'API_KEY_MISSING') {
+        setErrorMessage("設定エラー: APIキーが見つかりません。GitHubのSecretsに「VITE_API_KEY」を設定し、Actionを再実行してください。");
+      } else if (error.message?.includes('429') || error.message?.includes('Quota') || error.status === 429) {
         setErrorMessage("短時間に利用しすぎたようです。1分ほど待ってから再度お試しください。");
       } else if (error.message?.includes('503')) {
         setErrorMessage("サーバーが混み合っています。少し待ってから再度お試しください。");
+      } else if (error.message?.includes('403') || error.message?.includes('permission')) {
+        setErrorMessage("APIキーの権限エラーです。Google Cloud Consoleでウェブサイトの制限設定（URL）を確認してください。");
       } else {
         setErrorMessage("メニューの解析に失敗しました。インターネット接続を確認するか、写真が鮮明か確認してください。");
       }
