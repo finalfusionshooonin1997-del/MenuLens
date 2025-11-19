@@ -1,0 +1,7 @@
+{
+  "name": "MenuLens",
+  "description": "海外のメニューを翻訳し、AIで料理画像を生成する旅行用アプリ。データ通信量を節約する設計です。",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
