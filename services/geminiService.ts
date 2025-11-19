@@ -1,9 +1,12 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { MenuAnalysisResult } from "../types";
 
-// Initialize Gemini Client
-// In Vite/GitHub Pages, we use import.meta.env instead of process.env
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY });
+// Validate API Key immediately
+const apiKey = import.meta.env.VITE_API_KEY;
+
+// Initialize Gemini Client only if key exists to prevent immediate crash, 
+// but check inside functions
+const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 const analysisSchema: Schema = {
   type: Type.OBJECT,
@@ -43,6 +46,10 @@ const analysisSchema: Schema = {
 };
 
 export const analyzeMenuImage = async (base64Image: string): Promise<MenuAnalysisResult> => {
+  if (!ai || !apiKey) {
+    throw new Error("API_KEY_MISSING");
+  }
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash', // Fast and lightweight
@@ -77,6 +84,10 @@ export const analyzeMenuImage = async (base64Image: string): Promise<MenuAnalysi
 };
 
 export const generateDishImage = async (dishDescription: string): Promise<string> => {
+  if (!ai || !apiKey) {
+    throw new Error("API_KEY_MISSING");
+  }
+
   try {
     // Using Imagen 3 (via gemini-2.5-flash-image or imagen-4.0-generate-001 recommended in docs)
     const response = await ai.models.generateImages({
