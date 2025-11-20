@@ -84,14 +84,13 @@ export const generateDishImage = async (dishDescription: string): Promise<string
   }
 
   try {
-    // Using Imagen 3 (via gemini-2.5-flash-image or imagen-4.0-generate-001 recommended in docs)
+    // Using Imagen 3 for image generation
     const response = await ai.models.generateImages({
-      model: 'imagen-4.0-generate-001',
-      prompt: `A delicious, professional food photography shot of: ${dishDescription}. High resolution, appetizing lighting.`,
+      model: 'imagen-3.0-generate-001',
+      prompt: `A delicious, professional food photography shot of: ${dishDescription}. High resolution, appetizing lighting, centered composition, shallow depth of field.`,
       config: {
         numberOfImages: 1,
-        aspectRatio: '1:1',
-        outputMimeType: 'image/jpeg'
+        aspectRatio: '1:1'
       }
     });
 
