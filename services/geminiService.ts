@@ -126,7 +126,7 @@ export const generateDishImage = async (dishDescription: string): Promise<string
     if (!imagePart || !imagePart.inlineData) {
       // Fallback: Check if it returned text saying it can't generate
       const textPart = parts.find((part: any) => part.text);
-      if (textPart) {
+      if (textPart && textPart.text) {
         throw new Error(`Model returned text instead of image: ${textPart.text.substring(0, 50)}...`);
       }
       throw new Error("No image data found in response");
