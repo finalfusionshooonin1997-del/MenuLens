@@ -15,7 +15,7 @@ export const DishCard: React.FC<DishCardProps> = ({ dish, restaurantName }) => {
     let isMounted = true;
     const fetchImage = async () => {
       setLoadingImage(true);
-      const query = `${dish.originalName} ${dish.translatedName} ${restaurantName || ''} 料理`;
+      const query = [dish.originalName, dish.translatedName, restaurantName, '料理'].filter(Boolean).join(' ');
       const url = await searchDishImage(query);
       if (isMounted) {
         setImageUrl(url);
@@ -27,7 +27,7 @@ export const DishCard: React.FC<DishCardProps> = ({ dish, restaurantName }) => {
     return () => { isMounted = false; };
   }, [dish, restaurantName]);
 
-  const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(dish.originalName + ' ' + dish.translatedName + ' 料理')}&tbm=isch`;
+  const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent([dish.originalName, dish.translatedName, restaurantName, '料理'].filter(Boolean).join(' '))}&tbm=isch`;
 
   return (
     <div className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg mb-4 transition-transform duration-200 hover:scale-[1.01]">
