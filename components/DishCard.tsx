@@ -15,7 +15,7 @@ export const DishCard: React.FC<DishCardProps> = ({ dish, restaurantName }) => {
     let isMounted = true;
     const fetchImage = async () => {
       setLoadingImage(true);
-      const query = `${dish.originalName} ${dish.translatedName} ${restaurantName || ''} 料理`;
+      const query = [dish.originalName, dish.translatedName, restaurantName, '料理'].filter(Boolean).join(' ');
       const url = await searchDishImage(query);
       if (isMounted) {
         setImageUrl(url);
