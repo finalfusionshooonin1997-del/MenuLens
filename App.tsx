@@ -9,6 +9,7 @@ const App: React.FC = () => {
   const [appState, setAppState] = useState<AppState>(AppState.IDLE);
   const [result, setResult] = useState<MenuAnalysisResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [restaurantName, setRestaurantName] = useState<string>("");
 
   const handleCapture = async (base64Image: string) => {
     setAppState(AppState.PROCESSING_MENU);
@@ -66,7 +67,18 @@ const App: React.FC = () => {
 
       <main className="flex-1 overflow-y-auto relative">
         {appState === AppState.IDLE && (
-          <CameraView onCapture={handleCapture} />
+          <div className="relative h-full">
+            <CameraView onCapture={handleCapture} />
+            <div className="absolute top-4 left-4 right-4 z-20">
+              <input
+                type="text"
+                placeholder="レストラン名 (任意) - 検索精度が向上します"
+                value={restaurantName}
+                onChange={(e) => setRestaurantName(e.target.value)}
+                className="w-full bg-black/60 text-white border border-gray-500 rounded-lg px-4 py-3 backdrop-blur-md focus:outline-none focus:border-teal-500 placeholder-gray-400 shadow-lg text-sm"
+              />
+            </div>
+          </div>
         )}
 
         {appState === AppState.PROCESSING_MENU && (
@@ -98,7 +110,7 @@ const App: React.FC = () => {
 
             <div className="space-y-6">
               {result.dishes.map((dish, index) => (
-                <DishCard key={index} dish={dish} />
+                <DishCard key={index} dish={dish} restaurantName={restaurantName} />
               ))}
             </div>
 
