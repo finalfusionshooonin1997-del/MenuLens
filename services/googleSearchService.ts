@@ -12,17 +12,37 @@ export const searchDishImage = async (query: string): Promise<string | null> => 
   )}&cx=${engineId}&key=${apiKey}&searchType=image&num=1`;
 
   try {
+    console.log('Google Search API Request:', url.replace(apiKey, 'REDACTED'));
     const response = await fetch(url);
+
     if (!response.ok) {
-      throw new Error(`Google Search API error: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('Google Search API HTTP Error:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText
+      });
+      return null;
     }
+
     const data = await response.json();
+    console.log('Google Search API Response:', data);
+
     if (data.items && data.items.length > 0) {
       return data.items[0].link;
     }
+
+    console.warn('No image results found for query:', query);
     return null;
   } catch (error) {
     console.error("Failed to search dish image:", error);
+    if (error instanceof Error) {
+      console.error("Error details:", {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+    }
     return null;
   }
 };
