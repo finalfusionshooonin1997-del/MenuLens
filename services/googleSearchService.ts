@@ -12,7 +12,7 @@ export const searchDishImage = async (query: string): Promise<string | null> => 
   )}&cx=${engineId}&key=${apiKey}&searchType=image&num=1`;
 
   try {
-    console.log('Google Search API Request:', url);
+    console.log('Google Search API Request:', url.replace(apiKey, 'REDACTED'));
     const response = await fetch(url);
 
     if (!response.ok) {
