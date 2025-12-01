@@ -15,10 +15,41 @@ export const DishCard: React.FC<DishCardProps> = ({ dish, restaurantName }) => {
     let isMounted = true;
     const fetchImage = async () => {
       setLoadingImage(true);
-      const query = [dish.originalName, dish.translatedName, restaurantName, '料理'].filter(Boolean).join(' ');
-      const url = await searchDishImage(query);
+
+      // Generate query variations in order of specificity
+      const queryVariations = [
+        // 1. Restaurant + Translated Name (Most specific)
+        restaurantName ? `${restaurantName} ${dish.translatedName}` : null,
+        // 2. Restaurant + Original Name
+        restaurantName ? `${restaurantName} ${dish.originalName}` : null,
+        // 3. Translated Name + "Cuisine" (Generic but accurate)
+        `${dish.translatedName} 料理`,
+        // 4. Original Name + Translated Name
+        `${dish.originalName} ${dish.translatedName}`,
+        // 5. Original Name only (Fallback)
+        dish.originalName
+      ].filter((q): q is string => Boolean(q));
+
+      // Remove duplicates
+      const uniqueQueries = [...new Set(queryVariations)];
+
+      for (const query of uniqueQueries) {
+        if (!isMounted) return;
+
+        try {
+          const url = await searchDishImage(query);
+          if (url) {
+            setImageUrl(url);
+            setLoadingImage(false);
+            return; // Found image, stop searching
+          }
+        } catch (e) {
+          console.warn(`Failed to fetch image for query: ${query}`, e);
+        }
+      }
+
+      // If all queries fail
       if (isMounted) {
-        setImageUrl(url);
         setLoadingImage(false);
       }
     };
