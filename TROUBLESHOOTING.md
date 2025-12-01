@@ -29,7 +29,7 @@
   - 「アプリケーションの制限」が「HTTP リファラー」になっている場合:
     - **解決策**: 以下のURLを「ウェブサイトの制限」に追加してください:
       - `http://localhost:5173/*` (ローカル開発用)
-      - `https://<your-github-username>.github.io/*` (本番用)
+      - `https://<your-github-username>.github.io/*` (本番用 - `<your-github-username>`は実際のGitHubユーザー名に置き換えてください)
   - または、開発中は一時的に「制限なし」に設定してください。
 
 - **原因2**: Custom Search APIが有効になっていない
